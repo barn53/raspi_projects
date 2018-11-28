@@ -1,0 +1,22 @@
+{
+  "name": "js_door_server",
+  "version": "1.0.0",
+  "description": "HTTP server to open doors",
+  "main": "server.js",
+  "dependencies": {
+    "ffi": "git+https://github.com/node-ffi/node-ffi.git",
+    "fs": "0.0.1-security",
+    "http": "^0.0.0",
+    "https": "^1.0.0",
+    "moment": "^2.22.2",
+    "onoff": "^3.2.2",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Gerd Müller",
+  "license": "MIT"
+}

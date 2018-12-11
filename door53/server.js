@@ -76,26 +76,7 @@ function _handler(request, response) {
         }
         return
     }
-    /*********************************************/
-    else if (command === 'gaga') {
-        responseOk(response, '1')
-        led.write(0, (err) => {
-            setTimeout(() => {
-                led.write(1, (err) => { })
-            }, 500)
-        })
-        return
-    }
-    else if (command === 't') {
-        responseOk(response, '1')
-        libsend.sendElro(secrets.elro_id, 1, true, 10)
-        libsend.sendInterTechno(secrets.intertechno_id, 2, true, 10)
-    }
-    else if (command === 'f') {
-        responseOk(response, '1')
-        libsend.sendElro(secrets.elro_id, 1, false, 10)
-        libsend.sendInterTechno(secrets.intertechno_id, 2, false, 10)
-    }
+
     /*********************************************/
 
     if (!checkPosition(latitude, longitude)) {
@@ -109,7 +90,7 @@ function _handler(request, response) {
             responseOk(response, '1')
             led.write(0, (err) => {
                 setTimeout(() => {
-                    led.write(1)
+                    led.write(1, (err) => { })
                 }, 500)
             })
             triggerIFTTT(command, user, latitude + ', ' + longitude)
@@ -179,9 +160,7 @@ function fileNameFromTicket(ticket) {
 }
 
 function checkPosition(latitude, longitude) {
-    if (parseFloat(latitude) === 0.0 && parseFloat(longitude) === 0.0) {
-        return true;
-    } else if (parseFloat(latitude) >= secrets.min_latitude
+    if (parseFloat(latitude) >= secrets.min_latitude
         && parseFloat(latitude) <= secrets.max_latitude
         && parseFloat(longitude) >= secrets.min_longitude
         && parseFloat(longitude) <= secrets.max_longitude) {

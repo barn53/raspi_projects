@@ -61,6 +61,8 @@ function _handler(request, response) {
     var latitude = o.latitude || 0
     var longitude = o.longitude || 0
     var user = o.user || ''
+    var vcc = o.vcc || 0.0
+    var chipID = o.chipID || ''
 
     if (command === 'ticket') {
         createTicket(response)
@@ -93,7 +95,7 @@ function _handler(request, response) {
                     led.write(1, (err) => { })
                 }, 500)
             })
-            triggerIFTTT(command, user, latitude + ', ' + longitude)
+            triggerIFTTT(command + ';' + user, "vcc=" + vcc + ";chipID=" + chipID, latitude + ',' + longitude)
         }
         else {
             responseError(response)
@@ -101,9 +103,9 @@ function _handler(request, response) {
     }
     else if (command === 't') {
         if (validTicket(ticket)) {
-            responseOk(response, '1')
             libsend.sendElro(secrets.elro_id, 1, true, 10)
             libsend.sendInterTechno(secrets.intertechno_id, 2, true, 10)
+            responseOk(response, '1')
         }
         else {
             responseError(response)
@@ -111,9 +113,24 @@ function _handler(request, response) {
     }
     else if (command === 'f') {
         if (validTicket(ticket)) {
-            responseOk(response, '1')
             libsend.sendElro(secrets.elro_id, 1, false, 10)
             libsend.sendInterTechno(secrets.intertechno_id, 2, false, 10)
+            responseOk(response, '1')
+        }
+        else {
+            responseError(response)
+        }
+    }
+    else if (command === 'x') {
+        if (validTicket(ticket)) {
+            libsend.sendElro(secrets.elro_id, 1, true, 10)
+            libsend.sendInterTechno(secrets.intertechno_id, 2, true, 10)
+            setTimeout(() => {
+                libsend.sendElro(secrets.elro_id, 1, false, 10)
+                libsend.sendInterTechno(secrets.intertechno_id, 2, false, 10)
+            }, 1000)
+            responseOk(response, '1')
+            triggerIFTTT(command, user, vcc)
         }
         else {
             responseError(response)
